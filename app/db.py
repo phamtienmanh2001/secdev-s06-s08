@@ -10,6 +10,11 @@ def get_conn() -> sqlite3.Connection:
     conn.row_factory = sqlite3.Row
     return conn
 
+def query_one_params(sql: str, params: tuple):
+    with get_conn() as conn:
+        row = conn.execute(sql, params).fetchone()
+        return dict(row) if row else None
+
 def query(sql: str) -> List[Dict[str, Any]]:
     """НАМЕРЕННО НЕБЕЗОПАСНО: принимает сырую строку SQL."""
     with get_conn() as conn:
