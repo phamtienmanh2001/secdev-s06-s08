@@ -15,6 +15,11 @@ def query_one_params(sql: str, params: tuple):
         row = conn.execute(sql, params).fetchone()
         return dict(row) if row else None
 
+def query_params(sql: str, params: tuple):
+    with get_conn() as conn:
+        rows = conn.execute(sql, params).fetchall()
+        return [dict(r) for r in rows]
+
 def query(sql: str) -> List[Dict[str, Any]]:
     """НАМЕРЕННО НЕБЕЗОПАСНО: принимает сырую строку SQL."""
     with get_conn() as conn:
