@@ -21,7 +21,7 @@ def echo(request: Request, msg: str | None = None):
     return templates.TemplateResponse("index.html", {"request": request, "message": msg or ""})
 
 @app.get("/search")
-def search(q: str | None = None):
+def search(q: str | None = Query(default=None, min_length=1, max_length=32)):
     # SQLi: намеренно подставляем строку без параметров
     sql = "SELECT id, name, description FROM items WHERE name LIKE ?"
     pattern = f"%{q}%"
