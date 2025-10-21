@@ -31,7 +31,7 @@ jobs:
       PYTHONUNBUFFERED: "1"
     steps:
       - name: Mask any incidental value (подстраховка)
-        run: echo "::add-mask::${{ secrets.API_TOKEN }}"
+        run: echo "::add-mask::${{ secrets.SECRET_KEY }}"
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -63,11 +63,11 @@ jobs:
 
       - name: Secrets proof (DV2)
         env:
-          API_TOKEN: ${{ secrets.API_TOKEN }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: |
-          if [ -z "${API_TOKEN}" ]; then echo "secret present: no"; exit 1; fi
+          if [ -z "${SECRET_KEY}" ]; then echo "secret present: no"; exit 1; fi
           echo "secret present: yes" > EVIDENCE/S08/secrets-proof.txt
-          
+
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
