@@ -12,15 +12,45 @@
 - pytest (+ httpx) для автотестов
 
 ## Быстрый старт (локально)
-> ⚠️ Тут приведён примерный порядок; **ваш one-liner** под DV вы сформулируете сами на S06.
 
-```bash
-python -m venv .venv
-. .venv/bin/activate  # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-python scripts/init_db.py
-uvicorn app.main:app --reload
-```
+**Описание шагов (кратко):** 
+
+1. Скачайте проект.
+2. Убедитесь, что на вашем компьютере установлены Windows 11, Python 3.11 и PowerShell 5.1+.
+3. Откройте PowerShell в папке скачанного проекта.
+4. Скопируйте и запустите одну команду
+  ```bash
+  python -m venv .venv; .\.venv\Scripts\Activate.ps1; pip install -r requirements.txt; python scripts/init_db.py; pytest -q --junitxml=EVIDENCE/S06/test-report.xml
+  ```
+
+## Запуск в контейнере
+
+- **Сборка**
+
+  ```bash
+  docker build -t secdev-seed:pin .
+  docker run --rm -p 8000:8000 --name secdev-seed secdev-seed:pin
+  ```
+
+- **Порт:** 8000
+- **Healthcheck:**
+
+  ```bash
+  docker inspect secdev-seed | jq '.[0].State.Health' > EVIDENCE/S07/health.json
+  ```
+- **HTTP root code:**
+  ```bash
+  curl.exe -sS http://127.0.0.1:8000/ -o NUL -w "%{http_code}\n" > EVIDENCE/S07/http_root_code.txt
+  ```
+- **Метаданные контейнера:**
+  ```bash
+  docker inspect secdev-seed > EVIDENCE/S07/inspect_web.json
+  ```
+- **Размер образа:**
+  ```bash
+  docker image ls secdev-seed:pin --format "{{.Repository}} {{.Tag}} {{.Size}}" > EVIDENCE/S07/image-size.txt
+  ```
+
 
 Откройте: http://127.0.0.1:8000/  и попробуйте:
 
